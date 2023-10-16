@@ -6,6 +6,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 
 public class Servidor {
@@ -18,7 +19,7 @@ public class Servidor {
 
     public Servidor(int porta){
         this.porta = porta;
-        this.clientes = new ArrayList<PrintStream>();
+        this.setClientes(new ArrayList<PrintStream>());
     }
 
     public void executa () throws IOException{
@@ -28,19 +29,32 @@ public class Servidor {
 			while(true){
 			    Socket cliente = servidor.accept();
 			    System.out.println("Nova conexão com o cliente " + cliente.getInetAddress().getHostAddress());
-
-			    PrintStream ps = new PrintStream(cliente.getOutputStream());
-			    this.clientes.add(ps);
-
-			    TrataCliente tc = new TrataCliente(cliente.getInputStream(), this);
-			    new Thread(tc).start();
+			    
+			    TrataCliente tc = new TrataCliente( this,cliente);
+			    tc.run();
+			    /*
+			    PrintStream saida = new PrintStream(cliente.getOutputStream());
+			    //PrintStream saida= new PrintStream(cliente.getOutputStream());
+			    this.clientes.add(saida);
+			    
+			    chegada= new Scanner(cliente.getInputStream());
+			    TrataCliente tc = new TrataCliente( this);
+			    //new Thread(tc).start();*/
 			}
 		}
     }
 
     public void distribuiMensagem(String msg){
-        for(PrintStream cliente: this.clientes){
+        for(PrintStream cliente: this.getClientes()){
             cliente.println("Msg:"+ msg);
         }
     }
+
+	public List<PrintStream> getClientes() {
+		return clientes;
+	}
+
+	public void setClientes(List<PrintStream> clientes) {
+		this.clientes = clientes;
+	}
 }
