@@ -1,12 +1,12 @@
 package main;
 
 import java.io.IOException;
-import java.io.PrintStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 
 public class Servidor {
@@ -30,9 +30,13 @@ public class Servidor {
 			    Socket cliente = servidor.accept();
 			    System.out.println("Nova conexão com o cliente " + cliente.getInetAddress().getHostAddress());
 			    clientes.add(cliente);
+			    OutputStream outputStream = cliente.getOutputStream();
+	            PrintWriter out = new PrintWriter(outputStream, true);
+	            out.println("%esperandoJogador%");
 			    
 			    if(clientes.size() > 1) {
 			    	JogoCaraCara jogoCaraCara = new JogoCaraCara( this,clientes.get(0), clientes.get(1));
+			    	out.println("%esperandoPronto%");
 			    	jogoCaraCara.run();
 			    }
 			    /*
