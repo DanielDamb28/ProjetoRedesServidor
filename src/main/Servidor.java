@@ -15,11 +15,11 @@ public class Servidor {
     }
 
     private int porta;
-    private List<PrintStream> clientes;
+    private List<Socket> clientes;
 
     public Servidor(int porta){
         this.porta = porta;
-        this.setClientes(new ArrayList<PrintStream>());
+        this.setClientes(new ArrayList<Socket>());
     }
 
     public void executa () throws IOException{
@@ -29,9 +29,12 @@ public class Servidor {
 			while(true){
 			    Socket cliente = servidor.accept();
 			    System.out.println("Nova conexão com o cliente " + cliente.getInetAddress().getHostAddress());
+			    clientes.add(cliente);
 			    
-			    TrataCliente tc = new TrataCliente( this,cliente);
-			    tc.run();
+			    if(clientes.size() > 1) {
+			    	JogoCaraCara jogoCaraCara = new JogoCaraCara( this,clientes.get(0), clientes.get(1));
+			    	jogoCaraCara.run();
+			    }
 			    /*
 			    PrintStream saida = new PrintStream(cliente.getOutputStream());
 			    //PrintStream saida= new PrintStream(cliente.getOutputStream());
@@ -44,17 +47,16 @@ public class Servidor {
 		}
     }
 
-    public void distribuiMensagem(String msg){
-        for(PrintStream cliente: this.getClientes()){
-            cliente.println("Msg:"+ msg);
-        }
-    }
+    private Socket clientes(int i) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-	public List<PrintStream> getClientes() {
+	public List<Socket> getClientes() {
 		return clientes;
 	}
 
-	public void setClientes(List<PrintStream> clientes) {
+	public void setClientes(List<Socket> clientes) {
 		this.clientes = clientes;
 	}
 }
