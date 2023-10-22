@@ -26,10 +26,9 @@ public class JogoCaraCara extends Thread{
     }
 
     public void run() {
-    	System.out.println("Cliente conectado com  thread ("+this.getId()+ ") : "+ cliente1.getInetAddress() );
-		Scanner teclado =	new Scanner(System.in);
-		Scanner chegada; // o cliente vai digitar
-		
+    	System.out.println("Cliente conectado com  thread ("+this.getId()+ ") : "+ cliente1.getInetAddress()+" porta: "+cliente1.getLocalPort() );
+    	System.out.println("Cliente conectado com  thread ("+this.getId()+ ") : "+ cliente2.getInetAddress()+" porta: "+cliente2.getLocalPort() );
+	
 		//InputStreamReader fluxoDados;
 		
 		try {
@@ -56,6 +55,10 @@ public class JogoCaraCara extends Thread{
                     if(mensagemCliente1.equals("%pronto%")) {
                     	System.out.println("AAAAAAAAAA");
                     	clientePronto1 = true;
+                    }else {
+                    	out1.println( mensagemCliente1);
+                    	out2.println( mensagemCliente1);
+                    	System.out.println("Mensagem repassada");
                     }
             	}
 
@@ -70,6 +73,10 @@ public class JogoCaraCara extends Thread{
                     if(mensagemCliente2.equals("%pronto%")) {
                     	System.out.println("BBBBBBBBBBBBBB");
                     	clientePronto2 = true;
+                    }else {
+                    	out1.println( mensagemCliente2);
+                    	out2.println( mensagemCliente2);
+                    	System.out.println("Mensagem repassada");
                     }
             	}
             	if(clientePronto1 && clientePronto2) {
