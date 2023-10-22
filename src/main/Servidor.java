@@ -36,17 +36,15 @@ public class Servidor {
 			    
 			    if(clientes.size() > 1) {
 			    	JogoCaraCara jogoCaraCara = new JogoCaraCara( this,clientes.get(0), clientes.get(1));
-			    	out.println("%esperandoPronto%");
+			    	for(Socket c: clientes) {
+					    OutputStream output= c.getOutputStream();
+			            PrintWriter o = new PrintWriter(output, true);
+			    		o.println("%esperandoPronto%");
+			    	}
 			    	jogoCaraCara.run();
+			    	clientes.clear();
 			    }
-			    /*
-			    PrintStream saida = new PrintStream(cliente.getOutputStream());
-			    //PrintStream saida= new PrintStream(cliente.getOutputStream());
-			    this.clientes.add(saida);
 			    
-			    chegada= new Scanner(cliente.getInputStream());
-			    TrataCliente tc = new TrataCliente( this);
-			    //new Thread(tc).start();*/
 			}
 		}
     }
