@@ -41,7 +41,8 @@ public class Servidor {
 			            PrintWriter o = new PrintWriter(output, true);
 			    		o.println("%esperandoPronto%");
 			    	}
-			    	jogoCaraCara.run();
+			    	Thread jogoThread = new Thread(jogoCaraCara);
+	                jogoThread.start();
 			    	clientes.clear();
 			    }
 			    

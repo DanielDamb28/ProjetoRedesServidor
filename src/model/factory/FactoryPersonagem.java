@@ -4,8 +4,8 @@ import model.Personagem;
 
 public class FactoryPersonagem {
 	
-	public static Personagem criaPersonagem(String nome, Integer idade, String sexo, Double altura) {
-		Personagem personagem = new Personagem(nome,idade, sexo, altura);
+	public static Personagem criaPersonagem(String nome) {
+		Personagem personagem = new Personagem(nome);
 		return personagem;
 	}
 }

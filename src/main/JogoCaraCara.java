@@ -77,17 +77,38 @@ public class JogoCaraCara extends Thread{
                     	System.out.println("Mensagem repassada");
                     }
                     if(mensagemCliente1.contains("%jogada%")) {
-                    	/*if(mensagemCliente1.contains("%pergunta%"){
-                    		
+                    	if(mensagemCliente1.contains("%pergunta%")){
+                    		int inicioMensagem = mensagemCliente1.indexOf("%pergunta") + 10;
+                    		int fimMensagem = mensagemCliente1.indexOf("%/pergunta%");
+                    		String pergunta = mensagemCliente1.substring(inicioMensagem, fimMensagem);
+                    		String repassaPergunta = "%repassaJogada%%repassaPergunta%" + pergunta + "%/repassaPergunta%%/repassaJogada%";
+                    		out2.println(repassaPergunta);
                     	}else
                     	if(mensagemCliente1.contains("%chute%")) {
-                    		
-                    	}*/
+                    		int inicioMensagem = mensagemCliente1.indexOf("%chute%")+ 7;
+                    		int fimMensagem = mensagemCliente1.indexOf("%/chute%");
+                    		String chute = mensagemCliente1.substring(inicioMensagem, fimMensagem);
+                    		String repassaChute = "%repassaJogada%%repassaChute%" + chute + "%/repassaChute%%/repassaJogada%";
+                    		out2.println(repassaChute);
+                    	}
                     }
-                    out1.println( mensagemCliente1);
-                	out2.println( mensagemCliente1);
+                    if(mensagemCliente1.contains("%respostaChute%")){
+                    	if(mensagemCliente1.contains("%chuteCorreto%")) {
+                    		out2.println("%fimDeJogo%%voceVenceu%%/fimDeJogo%");
+                    		out1.println("%fimDeJogo%%vocePerdeu%%/fimDeJogo%");
+                    	}
+                    	if(mensagemCliente1.contains("%chuteErrado%")) {
+                    		out2.println(mensagemCliente1);
+                    	}
+                    }
             	}
 
+            	
+            	/*
+            	 * 
+            	 * 
+            	 * */
+            	
             	if(in2.ready()) {
             		String mensagemCliente2 = in2.readLine();
             		System.out.println(mensagemCliente2);
@@ -102,6 +123,31 @@ public class JogoCaraCara extends Thread{
                     if(mensagemCliente2.equals("%todosPersonagensRecebidos%")) {
                     	clienteRecebeuPersonagens2 = true;
                     	System.out.println("Mensagem ");
+                    }
+                    if(mensagemCliente2.contains("%jogada%")) {
+                    	if(mensagemCliente2.contains("%pergunta%")){
+                    		int inicioMensagem = mensagemCliente2.indexOf("%pergunta") + 10;
+                    		int fimMensagem = mensagemCliente2.indexOf("%/pergunta%");
+                    		String pergunta = mensagemCliente2.substring(inicioMensagem, fimMensagem);
+                    		String repassaPergunta = "%repassaJogada%%repassaPergunta%" + pergunta + "%/repassaPergunta%%/repassaJogada%";
+                    		out1.println(repassaPergunta);
+                    	}else 
+                    	if(mensagemCliente2.contains("%chute%")) {
+                    		int inicioMensagem = mensagemCliente2.indexOf("%chute%")+ 7;
+                    		int fimMensagem = mensagemCliente2.indexOf("%/chute%");
+                    		String chute = mensagemCliente2.substring(inicioMensagem, fimMensagem);
+                    		String repassaChute = "%repassaJogada%%repassaChute%" + chute + "%/repassaChute%%/repassaJogada%";
+                    		out1.println(repassaChute);
+                    	}
+                    }
+                    if(mensagemCliente2.contains("%respostaChute%")){
+                    	if(mensagemCliente2.contains("%chuteCorreto%")) {
+                    		out1.println("%fimDeJogo%%voceVenceu%%/fimDeJogo%");
+                    		out2.println("%fimDeJogo%%vocePerdeu%%/fimDeJogo%");
+                    	}
+                    	if(mensagemCliente2.contains("%chuteErrado%")) {
+                    		out1.println(mensagemCliente2);
+                    	}
                     }
             	}
             	if(clientePronto1 && clientePronto2) {
@@ -133,11 +179,9 @@ public class JogoCaraCara extends Thread{
             		comecaJogo = false;
             	}
             }
-            
             cliente1.close();
             cliente2.close();
-            
-		} catch (IOException e) {
+        } catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -166,23 +210,22 @@ public class JogoCaraCara extends Thread{
     
     public List<Personagem> criaPersonagens() {
     	List<Personagem> personagens = new ArrayList<Personagem>();
-    	personagens.add(FactoryPersonagem.criaPersonagem("Nome1", 23, "Masculino", 1.83));
-    	personagens.add(FactoryPersonagem.criaPersonagem("Nome2", 23, "Masculino", 1.83));
-    	personagens.add(FactoryPersonagem.criaPersonagem("Nome3", 23, "Masculino", 1.83));
-    	personagens.add(FactoryPersonagem.criaPersonagem("Nome4", 23, "Masculino", 1.83));
-    	personagens.add(FactoryPersonagem.criaPersonagem("Nome5", 23, "Masculino", 1.83));
-    	personagens.add(FactoryPersonagem.criaPersonagem("Nome6", 23, "Masculino", 1.83));
-    	personagens.add(FactoryPersonagem.criaPersonagem("Nome7", 23, "Masculino", 1.83));
-    	personagens.add(FactoryPersonagem.criaPersonagem("Nome8", 23, "Masculino", 1.83));
-    	
-    	personagens.add(FactoryPersonagem.criaPersonagem("Nome9", 23, "Feminino", 1.71));
-    	personagens.add(FactoryPersonagem.criaPersonagem("Nome10", 23, "Feminino", 1.71));
-    	personagens.add(FactoryPersonagem.criaPersonagem("Nome11", 23, "Feminino", 1.71));
-    	personagens.add(FactoryPersonagem.criaPersonagem("Nome12", 23, "Feminino", 1.71));
-    	personagens.add(FactoryPersonagem.criaPersonagem("Nome13", 23, "Feminino", 1.71));
-    	personagens.add(FactoryPersonagem.criaPersonagem("Nome14", 23, "Feminino", 1.71));
-    	personagens.add(FactoryPersonagem.criaPersonagem("Nome15", 23, "Feminino", 1.71));
-    	personagens.add(FactoryPersonagem.criaPersonagem("Nome16", 23, "Feminino", 1.71));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Nemo"));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Remi"));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Sulley"));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Woody"));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Buzz"));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Boo"));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Dory"));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Merida"));  	
+    	personagens.add(FactoryPersonagem.criaPersonagem("Mike"));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Vanellope"));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Helena"));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Carl"));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Edna"));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Beto"));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Ralph"));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Russell"));
     	
     	return personagens;
     }
