@@ -6,7 +6,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import model.Personagem;
+import model.factory.FactoryPersonagem;
 
 public class JogoCaraCara extends Thread{
     private Socket cliente1;
@@ -14,17 +19,29 @@ public class JogoCaraCara extends Thread{
     
     private Boolean clientePronto1;
     private Boolean clientePronto2;
+    
+    private Boolean clienteRecebeuPersonagens1;
+    private Boolean clienteRecebeuPersonagens2;
+    
+    private Boolean comecaJogo;
     private Servidor servidor;
+    
+    
+    
 
     public JogoCaraCara( Servidor servidor, Socket cliente1, Socket cliente2){
         this.servidor = servidor;
         this.cliente1 = cliente1;
         this.clientePronto1 = false;
+        this.clienteRecebeuPersonagens1 = false;
         
         this.cliente2 = cliente2;
         this.clientePronto2 = false;
+        this.clienteRecebeuPersonagens2 = false;
+        
+        this.comecaJogo = false;
     }
-
+    
     public void run() {
     	System.out.println("Cliente conectado com  thread ("+this.getId()+ ") : "+ cliente1.getInetAddress()+" porta: "+cliente1.getLocalPort() );
     	System.out.println("Cliente conectado com  thread ("+this.getId()+ ") : "+ cliente2.getInetAddress()+" porta: "+cliente2.getLocalPort() );
@@ -53,13 +70,22 @@ public class JogoCaraCara extends Thread{
                     }
                     System.out.println("Cliente 1 diz: " + mensagemCliente1);
                     if(mensagemCliente1.equals("%pronto%")) {
-                    	System.out.println("AAAAAAAAAA");
                     	clientePronto1 = true;
-                    }else {
-                    	out1.println( mensagemCliente1);
-                    	out2.println( mensagemCliente1);
+                    }
+                    if(mensagemCliente1.equals("%todosPersonagensRecebidos%")) {
+                    	clienteRecebeuPersonagens1 = true;
                     	System.out.println("Mensagem repassada");
                     }
+                    if(mensagemCliente1.contains("%jogada%")) {
+                    	/*if(mensagemCliente1.contains("%pergunta%"){
+                    		
+                    	}else
+                    	if(mensagemCliente1.contains("%chute%")) {
+                    		
+                    	}*/
+                    }
+                    out1.println( mensagemCliente1);
+                	out2.println( mensagemCliente1);
             	}
 
             	if(in2.ready()) {
@@ -71,19 +97,40 @@ public class JogoCaraCara extends Thread{
                     }
                     System.out.println("Cliente 2 diz: " + mensagemCliente2);
                     if(mensagemCliente2.equals("%pronto%")) {
-                    	System.out.println("BBBBBBBBBBBBBB");
                     	clientePronto2 = true;
-                    }else {
-                    	out1.println( mensagemCliente2);
-                    	out2.println( mensagemCliente2);
-                    	System.out.println("Mensagem repassada");
+                    }
+                    if(mensagemCliente2.equals("%todosPersonagensRecebidos%")) {
+                    	clienteRecebeuPersonagens2 = true;
+                    	System.out.println("Mensagem ");
                     }
             	}
             	if(clientePronto1 && clientePronto2) {
-            		out1.println("%iniciarJogo%");
-            		out2.println("%iniciarJogo%");
+            		String stringCompletaCliente1 = criaStringListaPersonagens();
+                	int inicio = stringCompletaCliente1.indexOf("%personagemSorteado%");
+                	int inicioPalavra = inicio + 20;
+                	int fim = stringCompletaCliente1.indexOf("%/personagemSorteado%");
+                	String stringCompletaCliente2 = stringCompletaCliente1.substring(0, inicioPalavra) + personagemSorteado();
+                	stringCompletaCliente2 = stringCompletaCliente2 + stringCompletaCliente1.substring(fim);
+            		out1.println(stringCompletaCliente1);
+            		out2.println(stringCompletaCliente2);
             		clientePronto1 = false;
             		clientePronto2 = false;
+            	}
+            	if(clienteRecebeuPersonagens1 && clienteRecebeuPersonagens2) {
+            		out1.println("%iniciarJogo%");
+            		out2.println("%iniciarJogo%");
+            		clienteRecebeuPersonagens1 = false;
+            		clienteRecebeuPersonagens2 = false;
+            		comecaJogo = true;
+            	}
+            	if(comecaJogo == true) {
+            		Integer decisao = decideQuemComeca();
+            		if(decisao == 0) {
+            			out1.println("%esperandoJogada%");
+            		}else if (decisao == 1) {
+            			out2.println("%esperandoJogada%");
+            		}
+            		comecaJogo = false;
             	}
             }
             
@@ -95,4 +142,58 @@ public class JogoCaraCara extends Thread{
 			e.printStackTrace();
 		}
     }
+    
+    public String criaStringListaPersonagens() {
+    	String listaPersonagens = "%listaPersonagens%";
+    	listaPersonagens = listaPersonagens + "%personagemSorteado%" + personagemSorteado() + "%/personagemSorteado";
+    	
+    	List<Personagem> personagens = criaPersonagens();
+    	for (Personagem personagem:personagens) {
+    		listaPersonagens = listaPersonagens + personagem; 		
+    	}
+    	listaPersonagens = listaPersonagens + "%/listaPersonagens%";
+    	
+    	return listaPersonagens;
+    }
+    
+    public Integer personagemSorteado() {
+    	 int limiteInferior = 0;
+         int limiteSuperior = 15;
+         Random random = new Random();
+         int numeroAleatorio = random.nextInt(limiteSuperior - limiteInferior + 1) + limiteInferior;
+         return numeroAleatorio;
+    }
+    
+    public List<Personagem> criaPersonagens() {
+    	List<Personagem> personagens = new ArrayList<Personagem>();
+    	personagens.add(FactoryPersonagem.criaPersonagem("Nome1", 23, "Masculino", 1.83));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Nome2", 23, "Masculino", 1.83));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Nome3", 23, "Masculino", 1.83));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Nome4", 23, "Masculino", 1.83));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Nome5", 23, "Masculino", 1.83));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Nome6", 23, "Masculino", 1.83));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Nome7", 23, "Masculino", 1.83));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Nome8", 23, "Masculino", 1.83));
+    	
+    	personagens.add(FactoryPersonagem.criaPersonagem("Nome9", 23, "Feminino", 1.71));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Nome10", 23, "Feminino", 1.71));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Nome11", 23, "Feminino", 1.71));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Nome12", 23, "Feminino", 1.71));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Nome13", 23, "Feminino", 1.71));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Nome14", 23, "Feminino", 1.71));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Nome15", 23, "Feminino", 1.71));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Nome16", 23, "Feminino", 1.71));
+    	
+    	return personagens;
+    }
+    
+    public Integer decideQuemComeca() {
+    	int limiteInferior = 0;
+        int limiteSuperior = 1;
+        Random random = new Random();
+        int numeroAleatorio = random.nextInt(limiteSuperior - limiteInferior + 1) + limiteInferior;
+        return numeroAleatorio;
+    }
+
+    
 }
