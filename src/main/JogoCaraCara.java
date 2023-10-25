@@ -103,6 +103,7 @@ public class JogoCaraCara extends Thread{
                     }if(mensagemCliente1.contains("%repassaJogada%")) {
                     	if(mensagemCliente1.contains("%jogada%")) {
                     		if(mensagemCliente1.contains("%respostaPergunta%")) {
+                    			System.out.println("repassando mensagem para o outro cliente");
                     			out2.println(mensagemCliente1);
                     		}
                     	}
@@ -157,10 +158,8 @@ public class JogoCaraCara extends Thread{
                     }if(mensagemCliente2.contains("%repassaJogada%")) {
                     	if(mensagemCliente2.contains("%jogada%")) {
                     		if(mensagemCliente2.contains("%respostaPergunta%")) {
-                    			int inicioResposta = mensagemCliente2.indexOf("%respostaPergunta%")+18;
-                    			int fimResposta = mensagemCliente2.indexOf("%/respostaPergunta%")-1;
-                    			String resposta = mensagemCliente2.substring(inicioResposta,fimResposta);
-                    			out2.println(resposta);
+                    			System.out.println("repassando mensagem para o outro cliente");
+                    			out1.println(mensagemCliente2);
                     		}
                     	}
                     }
