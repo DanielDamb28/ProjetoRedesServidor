@@ -218,15 +218,15 @@ public class JogoCaraCara extends Thread{
     
     public List<Personagem> criaPersonagens() {
     	List<Personagem> personagens = new ArrayList<Personagem>();
-    	personagens.add(FactoryPersonagem.criaPersonagem("Nemo"));
-    	personagens.add(FactoryPersonagem.criaPersonagem("Remi"));
-    	personagens.add(FactoryPersonagem.criaPersonagem("Sulley"));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Jessie"));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Linguine"));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Miguel"));
     	personagens.add(FactoryPersonagem.criaPersonagem("Woody"));
     	personagens.add(FactoryPersonagem.criaPersonagem("Buzz"));
     	personagens.add(FactoryPersonagem.criaPersonagem("Boo"));
-    	personagens.add(FactoryPersonagem.criaPersonagem("Dory"));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Flecha"));
     	personagens.add(FactoryPersonagem.criaPersonagem("Merida"));  	
-    	personagens.add(FactoryPersonagem.criaPersonagem("Mike"));
+    	personagens.add(FactoryPersonagem.criaPersonagem("Violeta"));
     	personagens.add(FactoryPersonagem.criaPersonagem("Vanellope"));
     	personagens.add(FactoryPersonagem.criaPersonagem("Helena"));
     	personagens.add(FactoryPersonagem.criaPersonagem("Carl"));
